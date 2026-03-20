@@ -232,28 +232,43 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const renderProducts = () => {
-    const container = document.createElement('div');
-    container.innerHTML = `
+    const grouped = PRODUCT_DATA.reduce((acc, curr) => {
+      const cat = curr.category || 'Other';
+      if(!acc[cat]) acc[cat] = [];
+      acc[cat].push(curr);
+      return acc;
+    }, {});
+
+    let html = `
       <div class="page-header">
         <h1>Products</h1>
-        <p>A directory of core Phenom platforms and applications.</p>
-      </div>
-      <div class="card-grid">
-        ${PRODUCT_DATA.map(p => {
-          const owner = PM_DATA.find(pm => pm.id === p.ownerId);
-          return `
-          <a href="#product-detail?id=${p.id}" class="card">
-            <div class="card-title">${p.name}</div>
-            <div class="card-desc">${p.desc}</div>
-            <div class="card-meta">
-              <i data-lucide="user"></i>
-              <span>${owner ? owner.name : 'Unknown Owner'}</span>
-            </div>
-          </a>
-          `;
-        }).join('')}
+        <p>A categorized directory of core Phenom capabilities across all personas.</p>
       </div>
     `;
+
+    for (const [category, products] of Object.entries(grouped)) {
+      html += `
+        <h2 style="margin-top: 3rem; margin-bottom: 1.5rem; color: var(--phenom-purple); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; font-size: 1.5rem;">${category}</h2>
+        <div class="card-grid" style="margin-top: 0;">
+      `;
+      html += products.map(p => {
+        const owner = PM_DATA.find(pm => pm.id === p.ownerId);
+        return `
+        <a href="#product-detail?id=${p.id}" class="card">
+          <div class="card-title">${p.name}</div>
+          <div class="card-desc">${p.desc}</div>
+          <div class="card-meta">
+            <i data-lucide="user"></i>
+            <span>${owner ? owner.name : 'Unknown Owner'}</span>
+          </div>
+        </a>
+        `;
+      }).join('');
+      html += `</div>`;
+    }
+
+    const container = document.createElement('div');
+    container.innerHTML = html;
     appContent.appendChild(container);
   };
 
