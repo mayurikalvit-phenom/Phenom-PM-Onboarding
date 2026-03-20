@@ -122,27 +122,28 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const activeWeekData = ONBOARDING_PLAN.find(w => w.week === activeTabWeek);
     if (activeWeekData) {
-      let weekHtml = `
-        <div class="week-section">
-          <div class="week-title">
-            <h2>Week ${activeWeekData.week} Tasks</h2>
-          </div>
-      `;
+      let weekHtml = `<div class="week-section-transparent">`; // No borders or title
 
       activeWeekData.days.forEach(day => {
         let tasksHtml = day.tasks.map(task => {
           const isChecked = state[task.id] ? 'checked' : '';
           const completedClass = state[task.id] ? 'completed' : '';
           return `
-            <label class="task-item ${completedClass}" data-task-id="${task.id}">
-              <input type="checkbox" ${isChecked}>
-              <span class="task-text">${task.title}</span>
-            </label>
+            <div class="task-accordion ${completedClass}" data-task-id="${task.id}">
+              <div class="task-header">
+                <input type="checkbox" class="task-checkbox" ${isChecked}>
+                <span class="task-title">${task.title}</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+              </div>
+              <div class="task-content">
+                ${task.details || 'No additional details provided.'}
+              </div>
+            </div>
           `;
         }).join('');
 
         weekHtml += `
-          <div class="day-section">
+          <div class="day-card">
             <div class="day-title">Day ${day.day}</div>
             <div class="task-list">
               ${tasksHtml}
@@ -156,7 +157,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
     appContent.innerHTML = html;
 
-    // Attach local DOM events
+    // Fast-update UI method for progress
+    const updateProgressUI = () => {
+      const state = getTasksState();
+      let total = 0; let comp = 0;
+      let w1Total = 0; let w1Comp = 0;
+      ONBOARDING_PLAN.forEach(w => w.days.forEach(d => d.tasks.forEach(t => {
+        total++; if (state[t.id]) comp++;
+        if (w.week === 1) { w1Total++; if (state[t.id]) w1Comp++; }
+      })));
+      const pct = total === 0 ? 0 : Math.round((comp/total)*100);
+      const unlocked = w1Total === 0 || (w1Comp/w1Total) >= 0.7;
+
+      const fill = document.querySelector('.slick-fill');
+      if (fill) fill.style.width = `${pct}%`;
+      const label = document.querySelector('.progress-labels span:last-child');
+      if (label) label.innerText = `${pct}%`;
+
+      document.querySelectorAll('.week-tab').forEach(tab => {
+        const wk = parseInt(tab.getAttribute('data-week'));
+        if (wk > 1) {
+          if (unlocked) {
+            tab.classList.remove('locked');
+            const icon = tab.querySelector('i');
+            if (icon) icon.remove();
+          } else {
+            tab.classList.add('locked');
+            if (!tab.querySelector('i')) {
+              tab.innerHTML += `<i data-lucide="lock" style="width: 14px; height: 14px; margin-left: 6px; position:relative; top:2px;"></i>`;
+              lucide.createIcons();
+            }
+          }
+        }
+      });
+    };
+
+    // Attach local DOM events for Tabs
     document.querySelectorAll('.week-tab').forEach(tab => {
       tab.addEventListener('click', (e) => {
         if (e.currentTarget.classList.contains('locked')) return;
@@ -165,16 +201,30 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    document.querySelectorAll('.task-item input[type="checkbox"]').forEach(input => {
+    // Attach local DOM events for Accordion mapping
+    document.querySelectorAll('.task-header').forEach(header => {
+      header.addEventListener('click', (e) => {
+        // Only expand/collapse if they didn't click the checkbox
+        if(e.target.tagName.toLowerCase() === 'input') return;
+        
+        const accordion = e.currentTarget.closest('.task-accordion');
+        accordion.classList.toggle('expanded');
+      });
+    });
+
+    document.querySelectorAll('.task-checkbox').forEach(input => {
       input.addEventListener('change', (e) => {
-        const item = e.target.closest('.task-item');
-        const taskId = item.getAttribute('data-task-id');
+        const accordion = e.target.closest('.task-accordion');
+        const taskId = accordion.getAttribute('data-task-id');
         toggleTask(taskId);
         
-        // Soft refresh for current page
-        renderDashboard(); 
-        
-        // Also refresh global navigation/icons if needed, but local replace is faster
+        // Local DOM updates instead of full renderDashboard (keeps accordions open)
+        if (e.target.checked) {
+          accordion.classList.add('completed');
+        } else {
+          accordion.classList.remove('completed');
+        }
+        updateProgressUI();
       });
     });
 

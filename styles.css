@@ -275,65 +275,54 @@ body.is-welcome {
   gap: 0.35rem;
 }
 
-.week-section {
-  margin-bottom: 3.5rem;
+/* Day Cards */
+.day-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: var(--shadow-sm);
-}
-
-.week-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 1rem;
   margin-bottom: 2rem;
-}
-
-.day-section {
-  margin-bottom: 2rem;
-}
-
-.day-section:last-child {
-  margin-bottom: 0;
 }
 
 .day-title {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   color: var(--text-main);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-weight: 700;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
 }
 
-/* Tasks */
-.task-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.task-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
+/* Accordion Tasks */
+.task-accordion {
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  background: var(--bg-card);
   transition: all var(--transition-fast);
+  overflow: hidden;
+}
+
+.task-accordion:hover {
+  border-color: #d0d0d0;
+}
+
+.task-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
   cursor: pointer;
   user-select: none;
   background: transparent;
-  border: 1px solid transparent;
 }
 
-.task-item:hover {
+.task-header:hover {
   background-color: var(--hover-bg);
-  border-color: var(--border-color);
 }
 
-.task-item input[type="checkbox"] {
+.task-header input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
   width: 1.25rem;
@@ -343,21 +332,21 @@ body.is-welcome {
   cursor: pointer;
   position: relative;
   transition: all var(--transition-fast);
-  margin-top: 0.15rem;
+  margin-top: 0;
   flex-shrink: 0;
 }
 
-.task-item:hover input[type="checkbox"] {
+.task-header:hover input[type="checkbox"] {
   border-color: var(--phenom-purple);
 }
 
-.task-item input[type="checkbox"]:checked {
+.task-header input[type="checkbox"]:checked {
   background: var(--primary-gradient);
   border-color: transparent;
   animation: checkPulse 0.3s ease;
 }
 
-.task-item input[type="checkbox"]:checked::after {
+.task-header input[type="checkbox"]:checked::after {
   content: '';
   position: absolute;
   left: 6px;
@@ -375,20 +364,47 @@ body.is-welcome {
   100% { transform: scale(1); }
 }
 
-.task-text {
-  font-size: 1rem;
-  transition: all var(--transition-fast);
+.task-title {
+  font-size: 1.05rem;
   color: var(--text-main);
-  padding-top: 0.1rem;
+  font-weight: 500;
+  flex-grow: 1;
+  transition: color var(--transition-fast);
 }
 
-.task-item.completed {
-  background: rgba(245, 245, 245, 0.5);
-}
-
-.task-item.completed .task-text {
+.task-accordion.completed .task-title {
   text-decoration: line-through;
   color: var(--text-muted);
+}
+.task-accordion.completed {
+  background: var(--hover-bg);
+  opacity: 0.8;
+}
+
+.accordion-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+  transition: transform var(--transition-med);
+}
+
+.task-accordion.expanded .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.task-content {
+  padding: 0 1rem 1rem 3.25rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  display: none;
+  border-top: 1px solid transparent;
+}
+
+.task-accordion.expanded .task-content {
+  display: block;
+  border-top-color: var(--border-color);
+  padding-top: 1rem;
 }
 
 /* Cards System */
