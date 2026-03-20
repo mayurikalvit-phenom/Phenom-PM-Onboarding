@@ -69,52 +69,67 @@ document.addEventListener('DOMContentLoaded', () => {
     appContent.appendChild(container);
   };
 
+  let activeTabWeek = 1;
+
   const renderDashboard = () => {
     const state = getTasksState();
     let totalTasks = 0;
     let completedTasks = 0;
+    let wk1Total = 0;
+    let wk1Completed = 0;
 
-    // Calculate progress
     ONBOARDING_PLAN.forEach(w => w.days.forEach(d => d.tasks.forEach(t => {
       totalTasks++;
       if (state[t.id]) completedTasks++;
+      if (w.week === 1) {
+        wk1Total++;
+        if (state[t.id]) wk1Completed++;
+      }
     })));
 
     const progressPercent = totalTasks === 0 ? 0 : Math.round((completedTasks/totalTasks)*100);
+    const isUnlocked = wk1Total === 0 || (wk1Completed / wk1Total) >= 0.7;
 
-    const container = document.createElement('div');
-    container.innerHTML = `
+    if (activeTabWeek > 1 && !isUnlocked) {
+      activeTabWeek = 1;
+    }
+
+    let html = `
       <div class="dashboard-header">
         <h1>Onboarding Dashboard</h1>
         <p>Your step-by-step path to getting up to speed at Phenom.</p>
         
-        <div class="progress-container">
-          <div class="progress-header">
+        <div class="slick-progress">
+          <div class="progress-labels">
             <span>Overall Progress</span>
-            <span>${progressPercent}% Complete</span>
+            <span style="font-weight: 700; color: var(--phenom-purple);">${progressPercent}%</span>
           </div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: ${progressPercent}%;"></div>
+          <div class="slick-track">
+            <div class="slick-fill" style="width: ${progressPercent}%;"></div>
           </div>
         </div>
       </div>
-      <div class="timeline" id="timeline-container"></div>
     `;
-    
-    appContent.appendChild(container);
-    const timelineContainer = document.getElementById('timeline-container');
 
-    ONBOARDING_PLAN.forEach(week => {
-      const weekEl = document.createElement('div');
-      weekEl.className = 'week-section';
-      
+    html += `<div class="week-tabs">`;
+    [1, 2, 3, 4].forEach(wk => {
+      const locked = wk > 1 && !isUnlocked;
+      const active = wk === activeTabWeek ? 'active' : '';
+      const lockIcon = locked ? `<i data-lucide="lock" style="width: 14px; height: 14px; margin-left: 6px; position:relative; top:2px;"></i>` : '';
+      html += `<button class="week-tab ${active} ${locked ? 'locked' : ''}" data-week="${wk}">Week ${wk}${lockIcon}</button>`;
+    });
+    html += `</div><div class="timeline" id="timeline-container">`;
+    
+    const activeWeekData = ONBOARDING_PLAN.find(w => w.week === activeTabWeek);
+    if (activeWeekData) {
       let weekHtml = `
-        <div class="week-title">
-          <h2>Week ${week.week}</h2>
-        </div>
+        <div class="week-section">
+          <div class="week-title">
+            <h2>Week ${activeWeekData.week} Tasks</h2>
+          </div>
       `;
 
-      week.days.forEach(day => {
+      activeWeekData.days.forEach(day => {
         let tasksHtml = day.tasks.map(task => {
           const isChecked = state[task.id] ? 'checked' : '';
           const completedClass = state[task.id] ? 'completed' : '';
@@ -135,22 +150,35 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         `;
       });
+      html += weekHtml + `</div>`;
+    }
+    html += `</div>`; // End timeline container
 
-      weekEl.innerHTML = weekHtml;
-      timelineContainer.appendChild(weekEl);
+    appContent.innerHTML = html;
+
+    // Attach local DOM events
+    document.querySelectorAll('.week-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        if (e.currentTarget.classList.contains('locked')) return;
+        activeTabWeek = parseInt(e.currentTarget.getAttribute('data-week'));
+        renderDashboard();
+      });
     });
 
-    // Event listeners for tasks
     document.querySelectorAll('.task-item input[type="checkbox"]').forEach(input => {
       input.addEventListener('change', (e) => {
         const item = e.target.closest('.task-item');
         const taskId = item.getAttribute('data-task-id');
         toggleTask(taskId);
         
-        // Re-render handled to update progress bar quickly and properly
-        handleRoute(); 
+        // Soft refresh for current page
+        renderDashboard(); 
+        
+        // Also refresh global navigation/icons if needed, but local replace is faster
       });
     });
+
+    lucide.createIcons();
   };
 
   const renderProducts = () => {
