@@ -22,9 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (path === '#welcome') {
       topNav.style.display = 'none';
+      document.body.classList.add('is-welcome');
       renderWelcome();
     } else {
       topNav.style.display = 'flex';
+      document.body.classList.remove('is-welcome');
       if (path === '#dashboard') renderDashboard();
       else if (path === '#products') renderProducts();
       else if (path === '#product-detail') renderProductDetail(params.get('id'));
@@ -54,9 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.createElement('div');
     container.className = 'welcome-container';
     container.innerHTML = `
-      <i data-lucide="compass" style="width: 48px; height: 48px; color: var(--primary-color); margin-bottom: 1rem;"></i>
-      <h1>Welcome to Phenom<br>PM Onboarding</h1>
-      <p style="font-size: 1.2rem; margin-bottom: 1rem; margin-top: 0.5rem; max-width: 500px">
+      <img src="phenom-logo.png" alt="Phenom Logo" style="height: 48px; margin-bottom: 2rem;">
+      <h1>PM Onboarding</h1>
+      <p style="font-size: 1.25rem; margin-bottom: 1rem; margin-top: 0.5rem; max-width: 500px">
         Your guide for the first few weeks. Find tasks, product deep-dives, and key people all in one accessible place.
       </p>
       <a href="#dashboard" class="btn-primary">
@@ -85,13 +87,14 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="dashboard-header">
         <h1>Onboarding Dashboard</h1>
         <p>Your step-by-step path to getting up to speed at Phenom.</p>
-        <div style="margin-top: 1rem; margin-bottom: 2rem; background: var(--hover-bg); padding: 1rem; border-radius: 8px;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-            <span style="font-weight: 500;">Overall Progress</span>
+        
+        <div class="progress-container">
+          <div class="progress-header">
+            <span>Overall Progress</span>
             <span>${progressPercent}% Complete</span>
           </div>
-          <div style="background: var(--border-color); height: 8px; border-radius: 4px; overflow: hidden;">
-            <div style="width: ${progressPercent}%; background: var(--primary-color); height: 100%; transition: width 0.3s ease;"></div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: ${progressPercent}%;"></div>
           </div>
         </div>
       </div>
@@ -194,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <h1>${product.name}</h1>
         <p style="font-size: 1.1rem; max-width: 600px; margin-top: 0.5rem;">${product.desc}</p>
         <div class="detail-owner">
-          <i data-lucide="user" style="color: var(--primary-color);"></i>
+          <i data-lucide="user"></i>
           Owned by: ${owner ? owner.name + ' (' + owner.role + ')' : 'Unassigned'}
         </div>
       </div>
@@ -221,10 +224,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ${PM_DATA.map(pm => {
           const owned = pm.products.map(pid => PRODUCT_DATA.find(p => p.id === pid)?.name).filter(Boolean).join(', ');
           return `
-          <div class="card" style="cursor: default; transform: none; box-shadow: none;">
+          <div class="card people-card">
             <div class="card-title">${pm.name}</div>
-            <div class="card-desc" style="color: var(--primary-color); font-weight: 500; font-size: 0.9rem;">${pm.role}</div>
-            <div class="card-meta" style="margin-top: auto; background: var(--bg-color); border: 1px solid var(--border-color)">
+            <div class="role-badge">${pm.role}</div>
+            <div class="card-meta" style="margin-top: auto;">
               <i data-lucide="box"></i>
               <span>Owns: ${owned || 'None'}</span>
             </div>

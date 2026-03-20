@@ -14,11 +14,21 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- SVG Gradient Definition for Lucide Icons -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <linearGradient id="phenom-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="var(--phenom-purple)" />
+        <stop offset="100%" stop-color="var(--phenom-magenta)" />
+      </linearGradient>
+    </defs>
+  </svg>
+
   <!-- Global Navigation -->
   <nav class="top-nav" id="top-nav" style="display: none;">
     <div class="nav-brand">
-      <i data-lucide="compass" class="brand-icon"></i>
-      <span>Phenom PM Onboarding</span>
+      <img src="phenom-logo.png" alt="Phenom Logo">
+      <span>PM Onboarding</span>
     </div>
     <div class="nav-links">
       <a href="#welcome" class="nav-link" id="nav-welcome">Home</a>
