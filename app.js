@@ -232,44 +232,91 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const renderProducts = () => {
-    const grouped = PRODUCT_DATA.reduce((acc, curr) => {
-      const cat = curr.category || 'Other';
-      if(!acc[cat]) acc[cat] = [];
-      acc[cat].push(curr);
-      return acc;
-    }, {});
+    // Strictly order the categories based on the System Map diagram:
+    const orderedCategories = [
+      'Candidate Experience (CX)',
+      'Recruiter Experience (RX)',
+      'Employee Experience (EX)',
+      'Manager Experience (MX)',
+      'Integrations'
+    ];
+
+    const grouped = {};
+    PRODUCT_DATA.forEach(p => {
+      const cat = p.category || 'Other';
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(p);
+    });
 
     let html = `
       <div class="page-header">
-        <h1>Products</h1>
-        <p>A categorized directory of core Phenom capabilities across all personas.</p>
+        <h1>Products System Map</h1>
+        <p>A structural view of the Phenom Product Suite and ownership graph.</p>
       </div>
+      
+      <div class="org-chart-container">
+        <div class="org-root">Phenom Product Suite</div>
+        <div class="org-branches">
     `;
 
-    for (const [category, products] of Object.entries(grouped)) {
+    orderedCategories.forEach((cat, index) => {
+      const products = grouped[cat] || [];
+      const isFirst = index === 0;
+      const isLast = index === orderedCategories.length - 1;
+      
       html += `
-        <h2 style="margin-top: 3rem; margin-bottom: 1.5rem; color: var(--phenom-purple); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; font-size: 1.5rem;">${category}</h2>
-        <div class="card-grid" style="margin-top: 0;">
+        <div class="org-col">
+          <div class="org-connector">
+            <div class="org-conn-left" style="${isFirst ? 'border-color:transparent;' : ''}"></div>
+            <div class="org-conn-center"></div>
+            <div class="org-conn-right" style="${isLast ? 'border-color:transparent;' : ''}"></div>
+          </div>
+          <div class="org-header">${cat}</div>
+          <div class="org-products">
       `;
+      
       html += products.map(p => {
         const owner = PM_DATA.find(pm => pm.id === p.ownerId);
         return `
-        <a href="#product-detail?id=${p.id}" class="card">
-          <div class="card-title">${p.name}</div>
-          <div class="card-desc">${p.desc}</div>
-          <div class="card-meta">
-            <i data-lucide="user"></i>
-            <span>${owner ? owner.name : 'Unknown Owner'}</span>
-          </div>
-        </a>
+            <div class="org-product-accordion">
+              <div class="opa-header">
+                <span>${p.name}</span>
+                <i data-lucide="chevron-down" class="opa-icon"></i>
+              </div>
+              <div class="opa-content">
+                <div class="opa-desc">${p.desc}</div>
+                <div class="opa-owner">
+                  <i data-lucide="user"></i> ${owner ? owner.name : 'Unowned'}
+                </div>
+              </div>
+            </div>
         `;
       }).join('');
-      html += `</div>`;
-    }
+
+      html += `
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
 
     const container = document.createElement('div');
     container.innerHTML = html;
     appContent.appendChild(container);
+
+    // Accordion interaction
+    document.querySelectorAll('.opa-header').forEach(hdr => {
+      hdr.addEventListener('click', (e) => {
+        const acc = e.currentTarget.closest('.org-product-accordion');
+        acc.classList.toggle('expanded');
+      });
+    });
+
+    lucide.createIcons();
   };
 
   const renderProductDetail = (id) => {

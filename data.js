@@ -1,35 +1,30 @@
 // data.js
 const PM_DATA = [
-  { id: 'p1', name: 'Alice Chen', role: 'Senior Product Manager', products: ['c1', 'c3', 'm3'] },
-  { id: 'p2', name: 'Bob Smith', role: 'Product Manager', products: ['c2', 'c4', 'r2', 'r4'] },
-  { id: 'p3', name: 'Charlie Davis', role: 'Associate Product Manager', products: ['c6', 'e1', 'e2', 'e4'] },
-  { id: 'p4', name: 'Diana King', role: 'VP of Product', products: ['e3', 'm1', 'm2', 'i1'] },
-  { id: 'p5', name: 'Evan Wright', role: 'Product Manager', products: ['c5', 'r1', 'r3'] },
+  { id: 'p1', name: 'Alice Chen', role: 'Senior Product Manager', products: ['c1', 'c3', 'e1'] },
+  { id: 'p2', name: 'Bob Smith', role: 'Product Manager', products: ['c2', 'c5', 'm1'] },
+  { id: 'p3', name: 'Charlie Davis', role: 'Associate Product Manager', products: ['c6', 'r2', 'r3'] },
+  { id: 'p4', name: 'Diana King', role: 'VP of Product', products: ['c7', 'r4', 'r5'] },
+  { id: 'p5', name: 'Evan Wright', role: 'Product Manager', products: ['c4', 'r1', 'i1'] }
 ];
 
 const PRODUCT_DATA = [
-  { id: 'c1', category: 'Candidate Experience', name: 'Personalized Career Site', desc: 'Dynamic, brand-aligned destination for talent discovery.', ownerId: 'p1' },
-  { id: 'c2', category: 'Candidate Experience', name: 'Phenom CMS', desc: 'Content management system for configuring careers sites without code.', ownerId: 'p2' },
-  { id: 'c3', category: 'Candidate Experience', name: 'Chatbot', desc: 'Conversational AI to screen, answer FAQs, and convert candidates.', ownerId: 'p1' },
-  { id: 'c4', category: 'Candidate Experience', name: 'Hosted Apply', desc: 'Seamless application workflow directly integrated via the career site.', ownerId: 'p2' },
-  { id: 'c5', category: 'Candidate Experience', name: 'University Recruiting & Events', desc: 'Platform for career fairs, campus events, and talent capture.', ownerId: 'p5' },
-  { id: 'c6', category: 'Candidate Experience', name: 'Talent Companion & Video Hub', desc: 'Advanced media platform for candidate enablement and employer branding.', ownerId: 'p3' },
+  { id: 'c1', category: 'Candidate Experience (CX)', name: 'CMS / Design Studio', desc: 'Design Studio to create and manage dynamic, brand-aligned career sites without code.', ownerId: 'p1' },
+  { id: 'c2', category: 'Candidate Experience (CX)', name: 'Career Site', desc: 'The front-end destination designed for ultimate talent discovery and employer branding.', ownerId: 'p2' },
+  { id: 'c3', category: 'Candidate Experience (CX)', name: 'Chatbot', desc: 'Conversational AI to screen candidates, answer FAQs, and convert visitors.', ownerId: 'p1' },
+  { id: 'c4', category: 'Candidate Experience (CX)', name: 'Events', desc: 'Capabilities for managing career fairs, campus hiring, and networking events natively.', ownerId: 'p5' },
+  { id: 'c5', category: 'Candidate Experience (CX)', name: 'Application (HA)', desc: 'Hosted Apply module directly integrated for quick candidate drop-off reduction.', ownerId: 'p2' },
+  { id: 'c6', category: 'Candidate Experience (CX)', name: 'Voice Agent (One Way Interview)', desc: 'AI-activated voice screening and one-way recorded interviews.', ownerId: 'p3' },
+  { id: 'c7', category: 'Candidate Experience (CX)', name: 'Video Capture', desc: 'Video generation and hosting for authentic employee testimonials.', ownerId: 'p4' },
   
-  { id: 'e1', category: 'Employee Experience', name: 'Internal Talent Marketplace', desc: 'Platform for internal mobility and job discovery.', ownerId: 'p3' },
-  { id: 'e2', category: 'Employee Experience', name: 'Referrals & Alumni Portal', desc: 'Tools for employees to refer external candidates and engage alumni.', ownerId: 'p3' },
-  { id: 'e3', category: 'Employee Experience', name: 'Career Pathing & Mentoring', desc: 'AI-driven skill matching to map career trajectories and assign mentors.', ownerId: 'p4' },
-  { id: 'e4', category: 'Employee Experience', name: 'Gigs & ERGs', desc: 'Short-term projects for internal skill building and employee resource group management.', ownerId: 'p3' },
-  
-  { id: 'r1', category: 'Recruiter Experience', name: 'Talent CRM', desc: 'Centralized hub to build pipelines, source passive talent, and track relationships.', ownerId: 'p5' },
-  { id: 'r2', category: 'Recruiter Experience', name: 'AI Scheduling', desc: 'Automated 1:1, sequential, and panel interview scheduling.', ownerId: 'p2' },
-  { id: 'r3', category: 'Recruiter Experience', name: 'Omnichannel Campaigns', desc: 'Email, SMS, and WhatsApp campaign creation with talent analytics.', ownerId: 'p5' },
-  { id: 'r4', category: 'Recruiter Experience', name: 'Structured Interviews & Video', desc: 'Pre-recorded video evaluations and structured interview scorecards.', ownerId: 'p2' },
-  
-  { id: 'm1', category: 'Manager & HR Experience', name: 'Hiring Manager Portal', desc: 'Dedicated app for hiring managers to review resumes and feedback.', ownerId: 'p4' },
-  { id: 'm2', category: 'Manager & HR Experience', name: 'Talent Analytics & Forecasting', desc: 'Deep insights into time-to-hire, diversity, and talent pipelines.', ownerId: 'p4' },
-  { id: 'm3', category: 'Manager & HR Experience', name: 'Skills Ontology & AI', desc: 'Enterprise talent graph powering fit-scoring, gig-matching and bias detection.', ownerId: 'p1' },
-  
-  { id: 'i1', category: 'HRIT & Integrations', name: 'Automation & Integration Engine', desc: 'Bi-directional architecture connecting ATS/HCM systems (Real-Time Connectors, APIs).', ownerId: 'p4' }
+  { id: 'r1', category: 'Recruiter Experience (RX)', name: 'Talent Marketplace', desc: 'Visual portal routing optimal talent profiles into recruiter pipelines.', ownerId: 'p5' },
+  { id: 'r2', category: 'Recruiter Experience (RX)', name: 'Referrals', desc: 'Social and direct referral tracking to enhance employee-sourced pipelines.', ownerId: 'p3' },
+  { id: 'r3', category: 'Recruiter Experience (RX)', name: 'ERGs', desc: 'Employee Resource Groups management mapped into the talent sourcing network.', ownerId: 'p3' },
+  { id: 'r4', category: 'Recruiter Experience (RX)', name: 'Career Pathing', desc: 'AI trajectory mapping to aid recruiters in matching roles internally.', ownerId: 'p4' },
+  { id: 'r5', category: 'Recruiter Experience (RX)', name: 'Mentoring', desc: 'Connectivity framework pairing senior experts with incoming recruits.', ownerId: 'p4' },
+
+  { id: 'e1', category: 'Employee Experience (EX)', name: 'Internal Talent Discovery', desc: 'Tools for employees to discover their next internal career jump.', ownerId: 'p1' },
+  { id: 'm1', category: 'Manager Experience (MX)', name: 'Hiring Manager Portal', desc: 'Streamlined candidate review workflows and feedback pipelines.', ownerId: 'p2' },
+  { id: 'i1', category: 'Integrations', name: 'Real-Time Sync Engine', desc: 'Bi-directional architecture connecting HR systems natively.', ownerId: 'p5' }
 ];
 
 const ONBOARDING_PLAN = [
