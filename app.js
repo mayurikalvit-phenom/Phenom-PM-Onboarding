@@ -252,11 +252,15 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="page-header">
         <h1>Products System Map</h1>
         <p>A structural view of the Phenom Product Suite and ownership graph.</p>
+        <div class="scroll-hint">
+          <i data-lucide="arrow-left-right"></i> Scroll horizontally to view full chart
+        </div>
       </div>
       
       <div class="org-chart-container">
-        <div class="org-root">Phenom Product Suite</div>
-        <div class="org-branches">
+        <div class="org-chart-inner">
+          <div class="org-root">Phenom Product Suite</div>
+          <div class="org-branches">
     `;
 
     orderedCategories.forEach((cat, index) => {
@@ -300,6 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     html += `
+          </div>
         </div>
       </div>
     `;

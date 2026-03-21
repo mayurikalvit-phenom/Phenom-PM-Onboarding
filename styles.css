@@ -164,12 +164,49 @@ body.is-welcome {
 
 /* Product System Map (Org Chart) */
 .org-chart-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   overflow-x: auto;
   padding: 1rem 0 4rem 0;
   width: 100%;
+}
+
+.org-chart-container::-webkit-scrollbar {
+  height: 8px;
+}
+.org-chart-container::-webkit-scrollbar-track {
+  background: var(--bg-main);
+  border-radius: 4px;
+}
+.org-chart-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+.org-chart-container::-webkit-scrollbar-thumb:hover {
+  background: var(--phenom-purple);
+}
+
+.org-chart-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 1200px;
+  margin: 0 auto;
+}
+
+.scroll-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--phenom-purple);
+  background: rgba(112,47,138,0.08);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+.scroll-hint i {
+  width: 16px;
+  height: 16px;
 }
 
 .org-root {
